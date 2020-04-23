@@ -17,6 +17,7 @@ project(OpenGLWithCherno)
 		CMAKE_PREFIX_PATH 
 		"C:/glew-2.1.0-win32/glew-2.1.0"
 		"C:/glfw-3.3.2.bin.WIN64/lib-vc2019"
+		"C:/Users/borys/Desktop/OpenGL_training/dependencies/glfw/build/src"
 	)
 	set(
 		CMAKE_LIBRARY_PATH 
@@ -25,6 +26,7 @@ project(OpenGLWithCherno)
 	)
 	find_package(GLEW REQUIRED)
 	find_package(OpenGL REQUIRED)
+	find_package(glfw3 CONFIG REQUIRED)
 
 	target_link_libraries(ExampleOpenGL
 		PRIVATE 
