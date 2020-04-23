@@ -1,18 +1,35 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
 project(OpenGLWithCherno)
 
-set(EXEC_NAME ExampleOpenGL)
-set(SOURCES main.cpp)
-add_executable(${EXEC_NAME} ${SOURCES})
-set_target_properties(${EXEC_NAME} PROPERTIES
-    CXX_STANDARD 17
+	set(SOURCES main.cpp)
+	add_executable(ExampleOpenGL ${SOURCES})
+	set_target_properties(ExampleOpenGL PROPERTIES
+		CXX_STANDARD 17
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
-)
+	)
+
+	add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/glfw/)
 
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/dependencies/glfw/)
 
-find_package(OpenGL REQUIRED)
-target_link_libraries(${EXEC_NAME} glfw OpenGL::GL)
+	set(
+		CMAKE_PREFIX_PATH 
+		"C:/glew-2.1.0-win32/glew-2.1.0"
+		"C:/glfw-3.3.2.bin.WIN64/lib-vc2019"
+	)
+	set(
+		CMAKE_LIBRARY_PATH 
+		"C:/glew-2.1.0-win32/glew-2.1.0/lib/Release/x64"
+		"C:/glfw-3.3.2.bin.WIN64/lib-vc2019"
+	)
+	find_package(GLEW REQUIRED)
+	find_package(OpenGL REQUIRED)
+	find_package()
 
+	target_link_libraries(ExampleOpenGL
+		PRIVATE 
+		glfw 
+		OpenGL::GL
+		GLEW::GLEW
+	)
