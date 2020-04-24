@@ -9,6 +9,7 @@ int main()
     if (!glfwInit())
         return -1;
 
+    glewInit();
     /* Create a windowed mode window and its OpenGL context */
     auto windowDeleter = [](GLFWwindow* w) {
         std::cout << "Closing the window!\n";

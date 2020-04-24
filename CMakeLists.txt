@@ -3,7 +3,18 @@ project(OpenGLWithCherno)
 
 	set(SOURCES main.cpp)
 
+	SET(CMAKE_PREFIX_PATH 
+		"C:/GLEW/GLEW"
+		"C:/dev/lib/cmake/glfw3/"
+	)
+	
+	SET(CMAKE_LIBRARY_PATH
+		"C:/GLEW/GLEW/lib/Release/x64/"
+		"C:/dev/lib" 
+	)
+
 	find_package(GLEW REQUIRED)
+	
 	find_package(OpenGL REQUIRED)
 	find_package(glfw3 CONFIG REQUIRED)
 
@@ -20,3 +31,9 @@ project(OpenGLWithCherno)
 		OpenGL::GL
 		GLEW::GLEW
 	)
+
+	target_compile_definitions(ExampleOpenGL PRIVATE GLEW_STATIC)
+	
+	foreach(var IN LISTS CMAKE_PREFIX_PATH)
+		message(STATUS "----->${var}")
+	endforeach()
