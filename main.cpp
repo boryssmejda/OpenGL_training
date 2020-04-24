@@ -31,6 +31,12 @@ int main()
 
     std::cout << glGetString(GL_VERSION) << '\n';
 
+    float positions[6] = {
+        -0.5f, -0.5f,
+        0.5f,  -0.5f,
+        0.0f,   0.5f
+    };
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(glfwWindow.get()))
     {
@@ -39,8 +45,8 @@ int main()
 
         glBegin(GL_TRIANGLES);
         glVertex2f(-0.5f, -0.5f);
-        glVertex2f(0.5f, -0.5f);
-        glVertex2f(0.0f, 0.5f);
+        glVertex2f(0.5f,  -0.5f);
+        glVertex2f(0.0f,   0.5f);
 
         glEnd();
 
