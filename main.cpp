@@ -9,7 +9,6 @@ int main()
     if (!glfwInit())
         return -1;
 
-    glewInit();
     /* Create a windowed mode window and its OpenGL context */
     auto windowDeleter = [](GLFWwindow* w) {
         std::cout << "Closing the window!\n";
@@ -26,6 +25,11 @@ int main()
 
     /* Make the window's context current */
     glfwMakeContextCurrent(glfwWindow.get());
+
+    if (glewInit() != GLEW_OK)
+        std::cout << "Error creating GLEW\n";
+
+    std::cout << glGetString(GL_VERSION) << '\n';
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(glfwWindow.get()))

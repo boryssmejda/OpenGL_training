@@ -4,15 +4,18 @@ project(OpenGLWithCherno)
 	set(SOURCES main.cpp)
 
 	SET(CMAKE_PREFIX_PATH 
-		"C:/GLEW/GLEW"
+		"C:/GLEW/GLEW/include"
 		"C:/dev/lib/cmake/glfw3/"
+		"C:/GLEW/GLEW/lib/Release/x64/"
 	)
 	
 	SET(CMAKE_LIBRARY_PATH
 		"C:/GLEW/GLEW/lib/Release/x64/"
-		"C:/dev/lib" 
+		"C:/dev/lib/" 
 	)
 
+	SET(GLEW_USE_STATIC_LIBS 1)
+	SET(GLEW_VERBOSE 1)
 	find_package(GLEW REQUIRED)
 	
 	find_package(OpenGL REQUIRED)
