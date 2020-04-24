@@ -1,17 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(OpenGLWithCherno)
 
-	foreach(path ${CMAKE_PREFIX_PATH})
-		message(STATUS "${path}")
-	endforeach()
-
-	foreach(path ${CMAKE_LIBRARY_PATH})
-		message(STATUS "${path}")
-	endforeach()
-
 	set(SOURCES main.cpp)
-	
-	message("----->>> ${CMAKE_PREFIX_PATH}")
+
 	find_package(GLEW REQUIRED)
 	find_package(OpenGL REQUIRED)
 	find_package(glfw3 CONFIG REQUIRED)
