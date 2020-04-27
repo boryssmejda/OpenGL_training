@@ -37,7 +37,7 @@ if platform.system() == "Windows" :
     cmake_command = 'cmake -D%s -D%s .. -G "Visual Studio 16 2019" -A x64' % (cmake_prefix_path, cmake_library_path)
     subprocess.run(cmake_command)
 
-elif platform.system() == "Linux":
+elif platform.system() == "Linux" or platform.system() == "Darwin":
 
     # define the name of the directory to be created
     buildDebug = "build_debug"
@@ -58,10 +58,6 @@ elif platform.system() == "Linux":
     os.chdir('../%s' % buildRelease)
     cmake_command = 'cmake .. -DCMAKE_BUILD_TYPE=RELEASE'
     subprocess.run(cmake_command)
-
-elif platform.system() == 'Darwin':
-    # TODO: Add building procedure for MacOS
-    pass
 
 
 
