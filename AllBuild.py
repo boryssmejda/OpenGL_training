@@ -53,12 +53,15 @@ elif platform.system() == "Linux" or platform.system() == "Darwin":
 
     os.chdir(buildDebug)
     cmake_command = 'cmake .. -DCMAKE_BUILD_TYPE=DEBUG'
-    subprocess.run(cmake_command)
+    subprocess.run(["cmake", "-D", "CMAKE_BUILD_TYPE=DEBUG", ".."])
+    subprocess.run("make")
+    subprocess.run("./ExampleOpenGL")
 
     os.chdir('../%s' % buildRelease)
-    cmake_command = 'cmake .. -DCMAKE_BUILD_TYPE=RELEASE'
+    cmake_command = ["cmake", "-D", "CMAKE_BUILD_TYPE=RELEASE", ".."]
     subprocess.run(cmake_command)
-
+    subprocess.run("make")
+    subprocess.run("./ExampleOpenGL")
 
 
 
