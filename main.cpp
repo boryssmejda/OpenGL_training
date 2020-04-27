@@ -15,6 +15,16 @@ int main()
     if (!glfwInit())
         return -1;
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	#ifdef __APPLE__
+		std::cout << "We are on MacOS\n";
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	#endif
+
+
     /* Create a windowed mode window and its OpenGL context */
     std::unique_ptr<GLFWwindow, decltype(&windowDeleter)> glfwWindow(
         glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello World", nullptr, nullptr), windowDeleter);
