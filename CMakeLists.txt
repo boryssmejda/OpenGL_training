@@ -3,9 +3,11 @@ project(OpenGLWithCherno)
 
 	set(SOURCES main.cpp)
 	
-	set(GLEW_USE_STATIC_LIBS 1)
-	find_package(GLEW REQUIRED)
+	if (MSVC)
+		set(GLEW_USE_STATIC_LIBS 1)
+	endif (MSVC)
 	
+	find_package(GLEW REQUIRED)
 	find_package(OpenGL REQUIRED)
 	find_package(glfw3 CONFIG REQUIRED)
 
