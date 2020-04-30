@@ -1,7 +1,16 @@
 cmake_minimum_required(VERSION 3.15)
 project(OpenGLWithCherno)
 
-	set(SOURCES main.cpp)
+	set(SOURCES 
+		main.cpp
+		rectangle.cpp
+		diamond.cpp
+	)
+		
+	set(HEADERS
+		rectangle.hpp
+		diamond.hpp
+	)
 	
 	if (MSVC)
 		set(GLEW_USE_STATIC_LIBS 1)
@@ -11,7 +20,7 @@ project(OpenGLWithCherno)
 	find_package(OpenGL REQUIRED)
 	find_package(glfw3 CONFIG REQUIRED)
 
-	add_executable(ExampleOpenGL ${SOURCES})
+	add_executable(ExampleOpenGL ${SOURCES} ${HEADERS})
 	set_target_properties(ExampleOpenGL PROPERTIES
 		CXX_STANDARD 17
 		CXX_STANDARD_REQUIRED YES
