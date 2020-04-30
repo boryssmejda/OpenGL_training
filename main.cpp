@@ -188,15 +188,21 @@ int main()
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+    glfwSetTime(0.0);
+    double timeStep = 0.02;
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(glfwWindow.get()))
     {
+        while (glfwGetTime() <= timeStep);
+        glfwSetTime(0.0);
+     
         processInput(glfwWindow);
 
         /* Render here */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        d.update();
+        d.update(timeStep);
         d.draw();
         //r.draw();
         //glUseProgram(shaderProgram);

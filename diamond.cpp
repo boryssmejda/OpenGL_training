@@ -1,5 +1,28 @@
 #include "diamond.hpp"
 #include <iostream>
+#include <cmath>
+
+void Diamond::changeRadius()
+{
+	if (m_expansionDirection == RadiusExpansionDirection::DECREASING)
+	{
+		m_radius -= m_radiusDecrement;
+		if (m_radius < m_minRadius)
+		{
+			m_radius = m_minRadius;
+			m_expansionDirection = RadiusExpansionDirection::INCREASING;
+		}
+	}
+	else
+	{
+		m_radius += m_radiusDecrement;
+		if (m_radius > m_maxRadius)
+		{
+			m_radius = m_maxRadius;
+			m_expansionDirection = RadiusExpansionDirection::DECREASING;
+		}
+	}
+}
 
 Diamond::Diamond()
 {
@@ -9,7 +32,7 @@ Diamond::Diamond()
 	glBindVertexArray(m_VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(m_diamond), m_diamond, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(m_diamond), m_diamond, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
@@ -34,8 +57,25 @@ void Diamond::draw()
 	//glBindVertexArray(0);
 }
 
-void Diamond::update()
+void Diamond::update(double t_timeIncrement)
 {
+	static double currentTime;
+
+	changeRadius();
+
+	for (int i = 0; i < 6; ++i)
+	{
+		double currentAngle = angleVelocity * currentTime + m_phaseShift[i];
+		//currentAngle = (currentAngle > 2 * m_pi ? 0.0 : currentAngle);
+
+		m_diamond[3 * i] = m_radius * std::cos(currentAngle);
+		m_diamond[3 * i + 1] = m_radius * std::sin(currentAngle);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(m_diamond), m_diamond, GL_DYNAMIC_DRAW);
+
+	currentTime += t_timeIncrement;
 }
 
 void Diamond::setShader(unsigned int t_shaderID)

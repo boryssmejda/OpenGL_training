@@ -18,7 +18,6 @@ class Rectangle
         0.5f,  -0.5f,  0.0f     // second right
     };
 
-
 public:
     Rectangle();
     ~Rectangle();
