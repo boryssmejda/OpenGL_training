@@ -113,6 +113,26 @@ int main()
     // set up vertex data and configure vertex attributes
     // --------------------------------------------------
 
+    float triangle[] = {
+        -0.8f, 0.8f,
+        -0.6f, 0.8f,
+        -0.7f, 0.6f
+    };
+
+    unsigned int triangleVertexArray, trVBO;
+    
+    glCreateVertexArrays(1, &triangleVertexArray);
+    glGenBuffers(1, &trVBO);
+
+    glBindVertexArray(triangleVertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, trVBO);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(0);
+
+
+    // ---------------------------------------------------------
     float vertices[] = {
      0.5f,  0.5f, 0.0f,  // top right
      0.5f, -0.5f, 0.0f,  // bottom right
@@ -157,6 +177,9 @@ int main()
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+        glBindVertexArray(triangleVertexArray);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
         /* Swap front and back buffers */
         glfwSwapBuffers(glfwWindow.get());
 
@@ -166,7 +189,7 @@ int main()
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-
+    glDeleteProgram(shaderProgram);
 
     return 0;
 }
