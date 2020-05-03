@@ -7,7 +7,7 @@ project(OpenGLWithCherno)
 		set(GLEW_USE_STATIC_LIBS 1)
 	endif (MSVC)
 	
-	find_package(GLEW REQUIRED)
+    find_package(GLEW REQUIRED)
 	find_package(OpenGL REQUIRED)
 	find_package(glfw3 CONFIG REQUIRED)
 
