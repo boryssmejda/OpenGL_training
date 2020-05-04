@@ -1,10 +1,30 @@
 cmake_minimum_required(VERSION 3.15)
 project(OpenGLWithCherno)
 
-	set(SOURCES main.cpp)
+	set(SOURCES 
+        main.cpp
+        
+        Renderer.hpp
+        Renderer.cpp
+        
+        VertexBuffer.hpp
+        VertexBuffer.cpp
+        
+        IndexBuffer.cpp
+        IndexBuffer.hpp
+        
+        VertexArray.hpp
+        VertexArray.cpp
+        
+        VertexBufferLayout.hpp
+        VertexBufferLayout.cpp
+        
+        Shader.cpp
+        Shader.hpp
+    )
 	
 	if (MSVC)
-		set(GLEW_USE_STATIC_LIBS 1)
+        set(GLEW_USE_STATIC_LIBS 1)
 	endif (MSVC)
 	
     find_package(GLEW REQUIRED)
@@ -13,16 +33,16 @@ project(OpenGLWithCherno)
 
 	add_executable(ExampleOpenGL ${SOURCES})
 	set_target_properties(ExampleOpenGL PROPERTIES
-		CXX_STANDARD 17
-		CXX_STANDARD_REQUIRED YES
-		CXX_EXTENSIONS NO
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
 	)
 
 	target_link_libraries(ExampleOpenGL
-		PRIVATE 
-		glfw 
-		OpenGL::GL
-		GLEW::GLEW
+        PRIVATE 
+        glfw 
+        OpenGL::GL
+        GLEW::GLEW
 	)
 
 	target_compile_definitions(ExampleOpenGL PRIVATE GLEW_STATIC)
