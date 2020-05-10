@@ -4,6 +4,7 @@
 #include <iostream>
 #include "debugHelper.hpp"
 #include "Shader.hpp"
+#include "stb_image.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -54,42 +55,15 @@ int main()
     // build and compile our shader program
     // ------------------------------------
     // vertex shader
-    glCheckError();
-    Shader shader("../shaders/vertexShader.vs", "../shaders/fragmentShader.fs");
-    glCheckError();
-    // set up vertex data and configure vertex attributes
-    // --------------------------------------------------
-
-    float triangle[] = {
-        -0.8f, 0.8f, 1.0f, 0.0f, 0.0f,
-        -0.6f, 0.8f, 0.0f, 1.0f, 0.0f,
-        -0.7f, 0.6f, 0.0f, 0.0f, 1.0f
-    };
-
-    unsigned int triangleVertexArray, trVBO;
-    
-    glCreateVertexArrays(1, &triangleVertexArray);
-    glGenBuffers(1, &trVBO);
-    glCheckError();
-
-    glBindVertexArray(triangleVertexArray);
-    glBindBuffer(GL_ARRAY_BUFFER, trVBO);
-    glCheckError();
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), nullptr);
-    glEnableVertexAttribArray(0);
-    glCheckError();
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2*sizeof(float)));
+    Shader shader("../shaders/vertexShader.vert", "../shaders/fragmentShader.frag");
     glCheckError();
     // ---------------------------------------------------------
     float vertices[] = {
-     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // top right
-     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
-    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
-    -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f   // top left 
+     // positions         // colors         // texture coords
+     0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+     0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f,   0.0f, 1.0f   // top left 
     };
     unsigned int indices[] = {  // note that we start from 0!
         0, 1, 2,  // first triangle
@@ -117,54 +91,99 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
     glCheckError();
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
-    glCheckError();
-
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
     glCheckError();
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3*sizeof(float)));
+    glCheckError();
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glCheckError();
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    /*Load an image*/
+    
+    unsigned int texture1;
+    glGenTextures(1, &texture1);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    // set the texture wrapping/filtering options (on the currently bound texture object)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    stbi_set_flip_vertically_on_load(true);
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("../textures/container.jpg", &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+    glCheckError();
+    // read facial expression picture
+
+    unsigned int texture2;
+    glGenTextures(1, &texture2);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glCheckError();
+
+    // set the texture wrapping/filtering options (on the currently bound texture object)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    data = stbi_load("../textures/awesomeface.png", &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+    glCheckError();
+
+    shader.use();
+    shader.setInt("texture1", 0);
+    shader.setInt("texture2", 1); // or with shader class
+    
+
     // uncomment this call to draw in wireframe polygons.
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    float offsetX = 0.0f;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(glfwWindow.get()))
     {
         processInput(glfwWindow);
-        int state = glfwGetKey(glfwWindow.get(), GLFW_KEY_RIGHT);
-        if (state == GLFW_PRESS)
-        {
-            offsetX += 0.01f;
-        }
-
-        state = glfwGetKey(glfwWindow.get(), GLFW_KEY_LEFT);
-        if (state == GLFW_PRESS)
-        {
-            offsetX -= 0.01f;
-        }
 
         /* Render here */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        shader.use();
-        shader.setFloat("currentX", offsetX);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
         glCheckError();
 
         // now render the triangle
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glCheckError();
-
-        glBindVertexArray(triangleVertexArray);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
         glCheckError();
 
         /* Swap front and back buffers */
@@ -176,7 +195,7 @@ int main()
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    
+    glDeleteBuffers(1, &EBO);
 
     return 0;
 }

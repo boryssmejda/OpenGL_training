@@ -1,6 +1,10 @@
 import os
 import subprocess
 import platform
+import downStbImage
+
+
+downStbImage.downloadStbImage()
 
 if platform.system() == "Windows" :
     # define the name of the directory to be created

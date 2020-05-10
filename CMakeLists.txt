@@ -5,11 +5,13 @@ project(OpenGLWithCherno)
         main.cpp
         src/debugHelper.cpp
         src/Shader.cpp
+        stb_image.cpp
     )
     
     set(HEADERS
         include/debugHelper.hpp
         include/Shader.hpp
+        stb_image.h
     )
 	
 	if (MSVC)
