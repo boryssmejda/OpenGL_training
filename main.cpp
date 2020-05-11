@@ -60,10 +60,10 @@ int main()
     // ---------------------------------------------------------
     float vertices[] = {
      // positions         // colors         // texture coords
-     0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-     0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-    -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f,   0.0f, 1.0f   // top left 
+     0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   0.55f, 0.55f,   // top right
+     0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   0.55f, 0.45f,   // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   0.45f, 0.45f,   // bottom left
+    -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f,   0.45f, 0.55f   // top left 
     };
     unsigned int indices[] = {  // note that we start from 0!
         0, 1, 2,  // first triangle
@@ -140,8 +140,8 @@ int main()
     glCheckError();
 
     // set the texture wrapping/filtering options (on the currently bound texture object)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -165,15 +165,32 @@ int main()
 
     // uncomment this call to draw in wireframe polygons.
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+    float mixtureValue = 0.0f;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(glfwWindow.get()))
     {
         processInput(glfwWindow);
 
+        int state = glfwGetKey(glfwWindow.get(), GLFW_KEY_UP);
+        if (state == GLFW_PRESS)
+        {
+            mixtureValue += 0.002f;
+            mixtureValue = (mixtureValue > 1.0f ? 1.0f : mixtureValue);
+        }
+
+        state = glfwGetKey(glfwWindow.get(), GLFW_KEY_DOWN);
+        if (state == GLFW_PRESS)
+        {
+            mixtureValue -= 0.002f;
+            mixtureValue = (mixtureValue < 0.0f ? 0.0f : mixtureValue);
+        }
+
         /* Render here */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        shader.use();
+        shader.setFloat("mixture", mixtureValue);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
