@@ -2,9 +2,11 @@ import os
 import subprocess
 import platform
 import downStbImage
+import downGLM
 
 
 downStbImage.downloadStbImage()
+downGLM.configureGLM()
 
 if platform.system() == "Windows" :
     # define the name of the directory to be created
